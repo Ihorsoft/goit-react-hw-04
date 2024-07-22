@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import { useId } from "react";
 import { Formik, Form, Field } from "formik";
 import css from "./SearchBar.module.css";
+import toast, { Toaster } from "react-hot-toast";
 
 const ContactSchema = Yup.object().shape({
   username: Yup.string()
@@ -11,10 +12,18 @@ const ContactSchema = Yup.object().shape({
     .required("Required"),
 });
 
-const ContactForm = ({ onSearch }) => {
-  // const usernameId = useId();
+const SearchBar = ({ onSearch }) => {
+  const notify = () =>
+    toast("Input field is empty. Input words for search images");
+
   const handleSubmit = (values, actions) => {
     const newValues = values;
+    console.log("Input field is empty? - ", !values.username);
+
+    if (!values.username) {
+      notify();
+      return;
+    }
 
     onSearch(newValues);
     actions.resetForm();
@@ -53,7 +62,8 @@ const ContactForm = ({ onSearch }) => {
           </button>
         </Form>
       </Formik>
+      <Toaster />
     </div>
   );
 };
-export default ContactForm;
+export default SearchBar;
